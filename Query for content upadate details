@@ -1,0 +1,6 @@
+dataset = endpoints 
+| filter content_version = "" and (endpoint_status = CONNECTED or endpoint_status = DISCONNECTED)
+| alter last_seen_diff = timestamp_diff(current_time(), last_seen, "DAY") 
+| filter last_seen_diff <= 7
+| comp count(endpoint_id ) as count
+| view graph type = pie show_percentage = `false` xaxis = count yaxis = count default_limit = `false` legend = `false` 
