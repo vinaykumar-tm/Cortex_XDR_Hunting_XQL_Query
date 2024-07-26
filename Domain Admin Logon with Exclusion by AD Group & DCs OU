@@ -1,0 +1,17 @@
+config case_sensitive = false
+| dataset = xdr_data 
+| filter event_type = EVENT_LOG and action_evtlog_event_id = 4624 
+| fields action_evtlog_data_fields as aedf, agent_hostname 
+| filter aedf != null
+| alter UserName = aedf->TargetUserName
+| alter DomainName = aedf->TargetDomainName
+| alter LogonType = aedf->LogonType
+| alter SourceIP = aedf->IpAddress
+| alter UserSID = aedf->TargetUserSid
+| join type=left (preset=ad_users | fields security_identifier , member_of ) as ad ad.security_identifier = UserSID
+| join type=left conflict_strategy=both (preset = ad_computers | fields name, OU, security_group_list) as adcoms adcoms.name = agent_hostname
+| alter isDomainAdmin = arrayfilter(member_of , "@element" = "CN=Domain Admins,CN=Users,DC=Domain,DC=com")
+| filter OU != "Domain Controllers"
+| filter isDomainAdmin != null
+| fields UserName, agent_hostname, DomainName, logonType, SourceIP, isDomainAdmin, member_of, security_group_list
+| dedup UserName, agent_hostname, DomainName, logonType, SourceIP
