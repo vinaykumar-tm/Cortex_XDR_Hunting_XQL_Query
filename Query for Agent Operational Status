@@ -1,0 +1,4 @@
+dataset = endpoints 
+| filter operational_status != ENUM.PROTECTED 
+| fields Endpoint_Name as Name, operational_status, is_edr_enabled, operating_system as OS, os_version, kernel_version, mac_address, agent_version as Cortex_Agent_Version, ip_address as IP, endpoint_type
+| view graph type = pie 
