@@ -1,0 +1,7 @@
+## Hunt for "cmd.exe" containing command "wmic csproduct get UUID"
+
+config case_sensitive = false
+| dataset = xdr_data
+| filter action_process_image_name = "cmd.exe" and action_process_image_command_line ~= "wmic csproduct get UUID"
+| dedup agent_id, agent_hostname, agent_ip_addresses, actor_process_image_name, actor_process_image_command_line , action_process_image_name, action_process_image_command_line
+| fields agent_id, agent_hostname, agent_ip_addresses, actor_process_image_name, actor_process_image_command_line , action_process_image_name, action_process_image_command_line
