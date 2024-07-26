@@ -1,0 +1,6 @@
+dataset = xdr_data 
+| filter agent_os_sub_type != NULL and agent_ip_addresses != NULL
+| fields agent_os_sub_type as type, agent_ip_addresses as ip
+| dedup ip by asc ip 
+| comp  count(type ) as count by type 
+| view  graph type = pie header = "Agent Platform breakdown"  show_callouts = true xaxis = type yaxis = count seriestitle("count", "sub type(s)")
