@@ -1,0 +1,10 @@
+dataset = xdr_data
+|filter action_file_sha256 IN ("put hash here", 
+                               "put hash here", 
+                               "put hash here") 
+                               OR action_module_sha256 IN ("put hash here", 
+                                                            "put hash here") 
+                               OR dst_action_external_hostname ~=".*someCnC.com|.*someCnC.com|someCnC-3rd-tld.someCnC.com" 
+                               OR action_external_hostname ~=".*someCnC.com|.*someCnC.com|someCnC-3rd-tld.someCnC.com" 
+                               OR dns_query_name ~=".*someCnC.com|.*someCnC.com"
+|fields agent_hostname, agent_ip_addresses, causality_actor_process_image_path, actor_process_image_path,action_external_hostname, action_file_path, action_module_path, dst_action_external_hostname, dns_query_name,event_id, action_file_sha256, action_module_sha256
