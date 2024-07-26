@@ -1,0 +1,8 @@
+// Hunt for PE32 files dropped by browsers
+
+config case_sensitive = false
+| dataset = xdr_data
+| filter actor_process_image_name in ("chrome.exe", "msedge.exe", "firefox.exe", "iexplore.exe", "google chrome", "firefox", "safari") and action_file_extension = "exe"
+| filter agent_ip_addresses = "IP"
+| fields agent_id, agent_hostname, agent_ip_addresses , action_file_name, action_file_path, action_file_sha256, action_file_size
+
