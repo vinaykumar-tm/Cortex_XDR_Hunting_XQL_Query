@@ -1,0 +1,8 @@
+dataset = endpoints
+| filter is_edr_enabled = ENUM.YES and endpoint_status = ENUM.CONNECTED
+//| dedup endpoint_name
+| join type = inner (dataset = xdr_data | fields agent_hostname | filter _product = "XDR agent"
+|dedup agent_hostname) as edr_agents endpoint_name = edr_agents.agent_hostname
+| comp count(endpoint_name) as active_agents
+|fields active_agents
+| view graph type = pie xaxis = active_agents yaxis = active_agents
