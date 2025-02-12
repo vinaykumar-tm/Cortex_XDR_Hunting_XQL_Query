@@ -1,0 +1,13 @@
+dataset = xdr_data | bin _time span = 1m
+
+|filter action_file_extension not contains "exe" and action_file_extension not contains "tmp" and action_file_extension not contains "db" and action_file_extension not contains "zip" and action_file_extension not contains "log" and action_file_extension not contains "lnk" and action_file_extension not contains "js" and action_file_extension not contains "txt" and action_file_extension not contains "dll" and action_file_extension not contains "htm" and action_file_extension not contains "html" and action_file_extension not contains "bat" and action_file_extension not contains "conf" and action_file_extension not contains "jar" and action_file_extension not contains "XLS" and action_file_extension not contains "png" and action_file_extension not contains "cer" and action_file_extension not contains "ini" and action_file_extension not contains "doc" and action_file_extension not contains "ppt" and action_file_extension not contains "pdf" and action_file_extension not contains "jpg" and action_file_extension not contains "GIF" and action_file_extension not contains "py" and action_file_extension not contains "xml" and action_file_extension not contains "css" and action_file_extension not contains "gz" and action_file_extension !=  null
+
+|filter action_username not contains "nt" and action_file_extension not contains "pst" and action_file_extension not contains "inf" and action_file_extension not contains "csv" and action_file_extension not contains "java" and action_file_extension not contains ""
+
+| alter previous_directory = replace(action_file_previous_file_path, action_file_previous_file_name, ""), current_directory = replace(action_file_path, action_file_name, ""), previous_file_name = replace(action_file_previous_file_name, action_file_previous_file_extension , ""), current_file_name = replace(action_file_name, action_file_extension, "")
+
+| comp count() as matched_events, values(current_directory ) as directories, values(action_username) as username, values(action_file_extension) as new_extensions by actor_process_image_name, agent_hostname , action_process_image_name ,_time
+
+|filter username != null and username not contains "nt"
+
+| filter array_length(directories ) >= 1 and matched_events >= 1
